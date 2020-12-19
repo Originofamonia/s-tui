@@ -117,7 +117,7 @@ def output_to_terminal(source):
     with open('data/cpu.txt', 'w') as fh:
         while not ticker.wait(wait_time_seconds):
             source.update()
-            source_name = source.get_source_name()
+            # source_name = source.get_source_name()
             powers = source.get_sensors_summary()
             package_power = powers['package-0,0']
             fh.write('{}\n'.format(package_power))
