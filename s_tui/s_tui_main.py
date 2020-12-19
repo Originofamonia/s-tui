@@ -59,7 +59,7 @@ from s_tui.sources.rapl_power_source import RaplPowerSource
 
 
 def main():
-    sources = [RaplPowerSource()]
+    sources = RaplPowerSource()
     output_to_terminal(sources)
 
 

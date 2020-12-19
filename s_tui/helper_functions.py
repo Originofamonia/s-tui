@@ -107,20 +107,15 @@ def output_to_csv(sources, csv_writeable_file):
         writer.writerow(csv_dict)
 
 
-def output_to_terminal(sources):
+def output_to_terminal(source):
     """Print statistics to the terminal"""
     results = OrderedDict()
-    for source in sources:
-        if source.get_is_available():
-            source.update()
-            source_name = source.get_source_name()
-            results[source_name] = source.get_sensors_summary()
-    for key, value in results.items():
-        sys.stdout.write(str(key) + ": ")
-        for skey, svalue in value.items():
-            sys.stdout.write(str(skey) + ": " + str(svalue) + ", ")
-            print("skey: {}, svalue: {}".format(skey, svalue))
-    sys.stdout.write("\n")
+
+    if source.get_is_available():
+        source.update()
+        source_name = source.get_source_name()
+        power = source.get_sensors_summary()
+
     sys.exit()
 
 
