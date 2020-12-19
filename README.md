@@ -54,6 +54,7 @@ To invoke pycharm from terminal:
 ```
 sudo /snap/pycharm-community/222/bin/pycharm.sh
 ```
+
 ## Simple installation
 
 ### pip (x86 + ARM)

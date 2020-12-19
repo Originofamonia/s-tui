@@ -37,11 +37,6 @@ import sys
 import psutil
 import urwid
 
-try:
-    import configparser
-except ImportError:
-    import ConfigParser as configparser
-
 
 def add_path(path):
     if path not in sys.path:
