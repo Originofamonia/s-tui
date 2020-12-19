@@ -27,6 +27,7 @@ import csv
 import sys
 import json
 import time
+import threading
 
 from collections import OrderedDict
 
@@ -109,14 +110,19 @@ def output_to_csv(sources, csv_writeable_file):
 
 def output_to_terminal(source):
     """Print statistics to the terminal"""
-    results = OrderedDict()
+    wait_time_seconds = 0.1
+    timeout = time.time() + 9
 
-    if source.get_is_available():
-        source.update()
-        source_name = source.get_source_name()
-        power = source.get_sensors_summary()
-
-    sys.exit()
+    ticker = threading.Event()
+    with open('data/cpu.txt', 'w') as fh:
+        while not ticker.wait(wait_time_seconds):
+            source.update()
+            source_name = source.get_source_name()
+            powers = source.get_sensors_summary()
+            package_power = powers['package-0,0']
+            fh.write('{}\n'.format(package_power))
+            if time.time() > timeout:
+                break
 
 
 def output_to_json(sources):
