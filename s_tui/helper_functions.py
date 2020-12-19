@@ -119,6 +119,7 @@ def output_to_terminal(sources):
         sys.stdout.write(str(key) + ": ")
         for skey, svalue in value.items():
             sys.stdout.write(str(skey) + ": " + str(svalue) + ", ")
+            print("skey: {}, svalue: {}".format(skey, svalue))
     sys.stdout.write("\n")
     sys.exit()
 

@@ -88,7 +88,7 @@ DEFAULT_LOG_FILE = "_s-tui.log"
 DEFAULT_CSV_FILE = "s-tui_log_" + time.strftime("%Y-%m-%d_%H_%M_%S") + ".csv"
 
 VERSION_MESSAGE = \
-    "s-tui " + __version__ +\
+    "s-tui " + __version__ + \
     " - (C) 2017-2020 Alex Manuskin, Gil Tsuker\n\
     Released under GNU GPLv2"
 
@@ -101,6 +101,7 @@ graph_controller = None
 
 class MainLoop(urwid.MainLoop):
     """ Inherit urwid Mainloop to catch special character inputs"""
+
     def signal_handler(self, frame):
         """signal handler for properly exiting Ctrl+C"""
         graph_controller.stress_conroller.kill_stress_process()
@@ -186,6 +187,7 @@ class GraphView(urwid.WidgetPlaceholder):
     The GraphView can change the state of the graph, since it provides the UI
     The change is state should be reflected in the GraphController
     """
+
     def __init__(self, controller):
         # constants
         self.left_margin = 0
@@ -316,7 +318,7 @@ class GraphView(urwid.WidgetPlaceholder):
                 self.visible_summaries[sensor].update_visibility(
                     visible_sensors)
 
-        self.main_window_w.base_widget[0].body[self.summary_widget_index] =\
+        self.main_window_w.base_widget[0].body[self.summary_widget_index] = \
             self._generate_summaries()
 
         self.original_widget = self.main_window_w
@@ -453,7 +455,7 @@ class GraphView(urwid.WidgetPlaceholder):
             clock_widget = [
                 urwid.Text(('bold text', u"Stress Timer"), align="center"),
                 self.clock_view
-                ]
+            ]
 
         controls = [urwid.Text(('bold text', u"Modes"), align="center")]
         controls += self.mode_buttons
@@ -791,6 +793,7 @@ class GraphController:
 
     def save_settings(self):
         """ Save the current configuration to a user config file """
+
         def _save_displayed_setting(conf, submenu):
             items = []
             if (submenu == "Graphs"):
@@ -866,46 +869,11 @@ class GraphController:
 
 
 def main():
-    args = get_args()
-    # Print version and exit
-    if args.version:
-        print(VERSION_MESSAGE)
-        sys.exit(0)
-
-    # Setup logging util
-    log_file = DEFAULT_LOG_FILE
-    if args.debug_run:
-        args.debug = True
-    if args.debug or args.debug_file is not None:
-        level = logging.DEBUG
-        if args.debug_file is not None:
-            log_file = args.debug_file
-        log_formatter = logging.Formatter(
-            "%(asctime)s [%(funcName)s()] [%(levelname)-5.5s]  %(message)s")
-        root_logger = logging.getLogger()
-        file_handler = logging.FileHandler(log_file)
-        file_handler.setFormatter(log_formatter)
-        root_logger.addHandler(file_handler)
-        root_logger.setLevel(level)
-
-    if args.terminal or args.json:
-        logging.info("Printing single line to terminal")
-        sources = [FreqSource(), TempSource(),
-                   UtilSource(),
-                   RaplPowerSource(),
-                   FanSource()]
-        if args.terminal:
-            output_to_terminal(sources)
-        elif args.json:
-            output_to_json(sources)
-
-    global graph_controller
-    graph_controller = GraphController(args)
-    graph_controller.main()
+    sources = [RaplPowerSource()]
+    output_to_terminal(sources)
 
 
 def get_args():
-
     parser = argparse.ArgumentParser(
         description=HELP_MESSAGE,
         formatter_class=argparse.RawTextHelpFormatter)
@@ -916,7 +884,7 @@ def get_args():
     parser.add_argument('--debug-file',
                         default=None,
                         help="Use a custom debug file. Default: " +
-                        "_s-tui.log")
+                             "_s-tui.log")
     # This is mainly to be used for testing purposes
     parser.add_argument('-dr', '--debug_run',
                         default=False, action='store_true',
@@ -926,9 +894,9 @@ def get_args():
     parser.add_argument('--csv-file',
                         default=None,
                         help="Use a custom CSV file. Default: " +
-                        "s-tui_log_<TIME>.csv")
+                             "s-tui_log_<TIME>.csv")
     parser.add_argument('-t', '--terminal', action='store_true',
-                        default=False,
+                        default=True,
                         help="Display a single line of stats without tui")
     parser.add_argument('-j', '--json', action='store_true',
                         default=False,
